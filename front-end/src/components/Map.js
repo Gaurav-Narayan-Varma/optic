@@ -8,14 +8,14 @@ export default function Map({wsjState, nytState}) {
   const [NytArticles, setNytArticles] = useState([])
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/wsjlist/')
+    fetch('http://34.219.124.255/wsjlist/')
         .then(r => r.json())
         .then(d => setWsJArticles(d))
         .catch(e => console.log(e))
   }, [])
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/nytlist/')
+    fetch('http://34.219.124.255/nytlist/')
         .then(r => r.json())
         .then(d => setNytArticles(d))
         .catch(e => console.log(e))
