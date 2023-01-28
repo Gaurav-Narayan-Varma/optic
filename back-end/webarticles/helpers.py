@@ -44,7 +44,7 @@ def create_wsj_entries():
     top_instance.title = a.getText()
     top_instance.link = a['href']
     archive_save(a['href'])
-
+    
     # fires off rest of web article archive reqs
     articles = soup.select('h3.WSJTheme--headline--unZqjb45.reset.WSJTheme--heading-3--2z_phq5h.typography--serif-display--ZXeuhS5E')
     for b in articles:

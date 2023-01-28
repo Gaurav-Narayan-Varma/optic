@@ -1,5 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import mapboxgl, { clearStorage } from 'mapbox-gl';
+// eslint-disable-next-line import/no-webpack-loader-syntax
+import MapboxWorker from 'worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker'
 import './Map.css'
 
 export default function Map({wsjState, nytState}) {
@@ -36,6 +38,9 @@ export default function Map({wsjState, nytState}) {
     // make sure articles are populated before heading into 2nd useEffect
     if (WsJArticles.length == 0) return
     if (NytArticles.length == 0) return
+
+    // added code
+    mapboxgl.workerClass = MapboxWorker
 
     map.current = new mapboxgl.Map({
       container: mapContainer.current,

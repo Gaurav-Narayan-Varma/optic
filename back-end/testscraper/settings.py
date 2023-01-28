@@ -133,6 +133,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRONJOBS = [
-    ('0 4 * * *', 'webarticles.cron.create_nyt_entries_cron'),
-    ('0 4 * * *', 'webarticles.cron.create_wsj_entries_cron')
+    ('10 17 * * *', 'webarticles.cron.create_nyt_entries_cron'),
+    ('43 17 * * *', 'webarticles.cron.create_wsj_entries_cron')
 ]
