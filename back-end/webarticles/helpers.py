@@ -36,7 +36,7 @@ def create_wsj_entries():
     # turns html content into soup
     html_content = get_wsj_world_html()
     soup = BeautifulSoup(html_content, "html.parser")
-
+    
     # fires off archive req of top web article
     top_article = soup.select('h2.WSJTheme--headline--unZqjb45.reset.WSJTheme--heading-1--38k38q8O.typography--serif-display--ZXeuhS5E')
     a = top_article[0].contents[0]
@@ -44,7 +44,7 @@ def create_wsj_entries():
     top_instance.title = a.getText()
     top_instance.link = a['href']
     archive_save(a['href'])
-    
+
     # fires off rest of web article archive reqs
     articles = soup.select('h3.WSJTheme--headline--unZqjb45.reset.WSJTheme--heading-3--2z_phq5h.typography--serif-display--ZXeuhS5E')
     for b in articles:
@@ -201,27 +201,27 @@ def scrape_archived_wsj(url):
     return article, entities 
 
 def scrape_archived_nyt(url):
-    # SETTING UP SELENIUM DRIVER AND SCRAPING EACH NYT ARTICLE
+    # starting up webdriver...
     options = webdriver.ChromeOptions()
     options = Options()
     options.add_argument('--disable-blink-features=AutomationControlled')
-    
     options.add_extension('/Users/gauravvarma/2023/project-optic/back-end/NopeCHA-CAPTCHA-Solver.crx')
     driver = webdriver.Chrome(executable_path='/path/to/chrome', options=options)
-    
+    # ...installing nopecha, routing to archive.ph
     driver.get('https://nopecha.com/setup#I-8CPW5LR1BBKH')
     driver.refresh()
     driver.get('https://archive.ph/')
-    driver.implicitly_wait(100)
+    driver.implicitly_wait(200)
     
-    # ENTERING IN ARTICLE URL AND HITTING SEARCH
+    # at archive.ph, entering url and hitting save button
     search_box = driver.find_element(By.XPATH, '//*[@style="padding:0px 2px;height:2em;width:100%;border:0"]')
     search_box.send_keys(url)
     search_button = driver.find_element(By.XPATH, '//*[@style="padding:4px;height:2em;width:100px"]')
     search_button.submit()
     print('search button clicked, waiting to scrape')
     
-    # potential captcha here, wait until popup loads 
+    # potential captcha here:
+    # stall it out until nopecha solves and archive popup loads 
     refresh_signal = driver.find_element(By.XPATH, '//*[@id="DIVALREADY2"]')
     print('popup located, proceeding to scrape')
 
@@ -340,24 +340,29 @@ def scrape_archived_nyt(url):
             return
 
 def archive_save(url):
-     # SETTING UP SELENIUM DRIVER AND GOING TO ARCHIVE.PH
+     # starting up web driver... 
     options = webdriver.ChromeOptions()
     options = Options()
     options.add_argument('--disable-blink-features=AutomationControlled')
     options.add_extension('/Users/gauravvarma/2023/project-optic/back-end/NopeCHA-CAPTCHA-Solver.crx')
     driver = webdriver.Chrome(executable_path='/path/to/chrome', options=options)
-    
+    # ...setting up nopecha
     driver.get('https://nopecha.com/setup#I-8CPW5LR1BBKH')
     driver.refresh()
-    
-    driver.implicitly_wait(100)
+    #  ...and routing to archive.ph
+    driver.implicitly_wait(200)
     driver.get('https://archive.ph/')
     
-    # ENTERING IN ARTICLE URL AND HITTING SEARCH
+    # entering in article url...
     search_box = driver.find_element(By.XPATH, '//*[@style="padding:0px 2px;height:2em;width:100%;border:0"]')
     search_box.send_keys(url)
+    # ...and submiting the search button
     search_button = driver.find_element(By.XPATH, '//*[@style="padding:4px;height:2em;width:100px"]')
     search_button.submit()
+    
+    # wait until the proper url is hit:
+    # this ensures that nopecha is given enough time to solve the captcha
+    wait = WebDriverWait(driver, 100).until(EC.url_contains("archive.ph/"))
     
     return
 
