@@ -116,26 +116,28 @@ export default function Map({wsjState, nytState}) {
     lineColorFilterArray.push('black')
     lineWidthFilterArray.push(0)
 
-    const mainFilter = {'filter': ['any', ...mainFilterArray]}
-    const colorFilter = {'fill-color': ['case', ...colorFilterArray]}
-    const opacityFilter = {'fill-opacity': ['case', ...opacityFilterArray]}
-    const lineColorFilter = {'line-color': ['case', ...lineColorFilterArray]}
-    const lineWidthFilter = {'line-width': ['case', ...lineWidthFilterArray]}
-
     map.current.on('idle', () => {
-      // updating the main filter
-      map.current.setFilter('state', mainFilter['filter'])
-
-      // updating the paint properties
-      map.current.setPaintProperty('state', 'fill-color', colorFilter['fill-color'])
-      map.current.setPaintProperty('state', 'fill-opacity', opacityFilter['fill-opacity'])
-
-      // updating border properties
-      map.current.setPaintProperty('state-border', 'line-color', lineColorFilter['line-color'])
-      map.current.setPaintProperty('state-border', 'line-width', lineWidthFilter['line-width'])
+      if (Object.keys(countryFrequencyMap).length == 0) {
+        // updating the main filter
+        map.current.setFilter('state', ['==', 'iso_3166_1', 'ABC'])
+        map.current.setFilter('state-border', ['==', 'iso_3166_1', 'ABC'])
+      }
+      else{
+        // updating the main filter
+        map.current.setFilter('state', ['any', ...mainFilterArray])
+  
+        // updating the paint properties
+        map.current.setPaintProperty('state', 'fill-color', ['case', ...colorFilterArray])
+        map.current.setPaintProperty('state', 'fill-opacity', ['case', ...opacityFilterArray])
+  
+        // updating border properties
+        map.current.setPaintProperty('state-border', 'line-color', ['case', ...lineColorFilterArray])
+        map.current.setPaintProperty('state-border', 'line-width', ['case', ...lineWidthFilterArray])
+      }
     })
 
     map.current.on('load', () => {
+      console.log('loaded')
       map.current.addSource('countries', {
         'type': 'vector',
         'url': 'mapbox://mapbox.country-boundaries-v1'
@@ -146,10 +148,10 @@ export default function Map({wsjState, nytState}) {
         'source-layer': 'country_boundaries',
         'source': 'countries',
         'paint': {
-          ...colorFilter,
-          ...opacityFilter,
+          'fill-color': ['case', ...colorFilterArray],
+          'fill-opacity': ['case', ...opacityFilterArray]
         },
-        ...mainFilter,
+        'filter': ['any', ...mainFilterArray],
         'layout': {
           // Make the layer visible by default.
           'visibility': 'visible'
@@ -161,8 +163,8 @@ export default function Map({wsjState, nytState}) {
         'source': 'countries',
         'source-layer': 'country_boundaries',
         'paint': {
-            ...lineColorFilter,
-            ...lineWidthFilter,
+            'line-color': ['case', ...lineColorFilterArray],
+            'line-width': ['case', ...lineWidthFilterArray],
             'line-dasharray': [10, 5],
         },
         'layout': {
