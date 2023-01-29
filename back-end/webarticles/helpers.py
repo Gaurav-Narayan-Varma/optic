@@ -30,6 +30,7 @@ from selenium.webdriver.common.keys import Keys
 import pytz
             
 def create_wsj_entries():
+    print('checking if this logs')
     # drops the current table
     WsjArticle.objects.all().delete()
 
