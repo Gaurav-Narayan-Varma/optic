@@ -137,7 +137,6 @@ export default function Map({wsjState, nytState}) {
     })
 
     map.current.on('load', () => {
-      console.log('loaded')
       map.current.addSource('countries', {
         'type': 'vector',
         'url': 'mapbox://mapbox.country-boundaries-v1'
