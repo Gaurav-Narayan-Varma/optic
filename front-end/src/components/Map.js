@@ -175,7 +175,7 @@ export default function Map({wsjState, nytState}) {
 
     const onStateClick = (e) => {
       const popupList = document.getElementsByClassName('mapboxgl-popup');
-      console.log(popupList.length)
+
       while (popupList.length > 0) {
         popupList[0].remove();
       }
@@ -199,7 +199,10 @@ export default function Map({wsjState, nytState}) {
       const countryArticles = allArticles.filter(article => article.entity.includes(countryISO));
   
       // construct list out of all articles
-      const articlesList = countryArticles.map(article => `<li>${article.title}</li>`).join('');
+      const articlesList = countryArticles.map(article => {
+        const source = article.link.indexOf('nytimes') !== -1 ? 'NYT' : 'WSJ'
+        return `<li>${article.title} <a href=${article.link}>(${source})</a></li>`
+      }).join('');
 
       popup.setLngLat(coordinates).setHTML(`
         <div>
