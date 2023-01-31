@@ -117,7 +117,6 @@ def create_nyt_entries():
         for article in articles:
             NytStable.objects.create(**article)
     
-    
 # fetches html from webpage
 def get_wsj_world_html():
     # using requests and beautfil soup to scrape the view source
@@ -149,7 +148,7 @@ def scrape_archived_wsj(url):
     driver.get('https://nopecha.com/setup#I-8CPW5LR1BBKH')
     driver.refresh()
     
-    driver.implicitly_wait(800)
+    driver.implicitly_wait(100)
     driver.get('https://archive.ph/')
     
     # enter in article url...

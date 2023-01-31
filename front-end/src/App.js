@@ -22,6 +22,7 @@ import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import Checkbox from "@mui/material/Checkbox";
 import { fontFamily } from '@mui/system';
+import Modal from '@mui/material/Modal';
 
 const drawerWidth = 250;
 
@@ -89,12 +90,26 @@ const Drawer = styled(MuiDrawer, {
   })
 }));
 
-function App() {
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
+function App() {
   const theme = useTheme();
   const [open, setOpen] = useState(true);
   const [wsjState, setWsjState] = useState(true);
   const [nytState, setNytState] = useState(true);
+
+  const [on, setOn] = useState(true);
+  const handleClose = () => setOn(false);
 
   const handleClick = (text) => {
     if(text=="The Wall Street Journal") {
@@ -108,6 +123,24 @@ function App() {
   return (
     <div className="App">
       {/* flex-direction: column */}
+      <div>
+        <Modal
+          open={on}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Welcome to Optic!
+            </Typography>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Optic creates a global news heatmap by analyzing world news sections of top newspapers daily. 
+            Users can filter newspapers and view stories by clicking on a country.
+            </Typography>
+          </Box>
+        </Modal>
+      </div>
       <AppBar 
         sx={{
           height:50
