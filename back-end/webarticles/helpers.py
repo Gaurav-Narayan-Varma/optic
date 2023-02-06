@@ -161,9 +161,8 @@ def scrape_archived_wsj(url):
     search_button.submit()
     print('search button submitted')
     
-    # refresh the page only after finding the popup
-    refresh_signal = driver.find_element(By.XPATH, '//*[@id="DIVALREADY2"]')
-    driver.refresh()
+    # potential captcha here, so implicitly wait until archived page loads 
+    refresh_signal = driver.find_element(By.XPATH, '//*[@style="margin:0;background-color:#EEEEEE"]')
     print('page refreshed')
     
     # scrape the wsj article
@@ -220,9 +219,8 @@ def scrape_archived_nyt(url):
     search_button.submit()
     print('search button clicked, waiting to scrape')
     
-    # potential captcha here:
-    # stall it out until nopecha solves and archive popup loads 
-    refresh_signal = driver.find_element(By.XPATH, '//*[@id="DIVALREADY2"]')
+    # potential captcha here, so implicitly wait until archived page loads 
+    refresh_signal = driver.find_element(By.XPATH, '//*[@style="margin:0;background-color:#EEEEEE"]')
     print('popup located, proceeding to scrape')
 
     driver.refresh()
@@ -362,7 +360,7 @@ def archive_save(url):
     
     # wait until the proper url is hit:
     # this ensures that nopecha is given enough time to solve the captcha
-    wait = WebDriverWait(driver, 100).until(EC.url_contains("archive.ph/"))
+    wait = WebDriverWait(driver, 200).until(EC.url_contains("archive.ph/"))
     
     return
 
